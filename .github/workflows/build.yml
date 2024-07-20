@@ -1,0 +1,24 @@
+name: Deployment workflow to GitHub Pages
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ "staging", "live" ]
+    paths: [ "site/**" ]
+
+jobs:
+  build-and-deploy:
+    name: Build & deploy site to GitHub Pages.
+    permissions:
+      actions: read
+      contents: write
+      pages: write
+    concurrency: site-build-${{ github.ref }}
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Deploy to GitHub.
+      uses: JamesIves/github-pages-deploy-action@v4
+      with:
+        folder: site
+        single-commit: true
